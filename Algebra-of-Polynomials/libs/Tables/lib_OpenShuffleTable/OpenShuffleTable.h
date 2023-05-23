@@ -18,13 +18,16 @@ public:
     virtual int remove(TKey key);
     virtual TValue find(TKey key);
     virtual void print();
+
+    TTableRecord<TKey, TValue>* getData();
+    int getSize();
 };
 
 template <typename TKey, typename TValue>
 OpenShuffleTable<TKey, TValue>::OpenShuffleTable() {
-    size = 100; // íà÷àëüíûé ðàçìåð òàáëèöû
-    count = 0; // êîëè÷åñòâî ýëåìåíòîâ â òàáëèöå
-    loadFactor = 0.75; // ìàêñèìàëüíàÿ çàãðóçêà òàáëèöû 
+    size = 100;
+    count = 0;
+    loadFactor = 0.75;
     data = new TTableRecord<TKey, TValue>[size];
 }
 
@@ -36,13 +39,11 @@ OpenShuffleTable<TKey, TValue>::~OpenShuffleTable() {
 template <typename TKey, typename TValue>
 int OpenShuffleTable<TKey, TValue>::insert(TKey key, TValue value) {
     if (count >= size * loadFactor) {
-        // Åñëè äîñòèãíóòà ìàêñèìàëüíàÿ çàãðóçêà òàáëèöû, òî óâåëè÷èâàåì åå ðàçìåð
         resize(size * 2);
     }
 
     int index = findFreeIndex(key);
     if (index != -1) {
-        // Åñëè íàøëè ñâîáîäíûé èíäåêñ, òî âñòàâëÿåì ýëåìåíò
         TTableRecord<TKey, TValue> record = { key, value };
         data[index] = record;
         count++;
@@ -55,7 +56,6 @@ template <typename TKey, typename TValue>
 int OpenShuffleTable<TKey, TValue>::remove(TKey key) {
     int index = findFreeIndex(key);
     if (index != -1) {
-        // Åñëè íàøëè ýëåìåíò ñ òàêèì æå êëþ÷îì, òî óäàëÿåì åãî
         data[index] = TTableRecord<TKey, TValue>(TKey(), TValue());
         count--;
         return 0;
@@ -68,10 +68,8 @@ TValue OpenShuffleTable<TKey, TValue>::find(TKey key) {
     try {
         int index = findFreeIndex(key);
         if (index != -1) {
-            // Åñëè íàøëè ýëåìåíò ñ òàêèì æå êëþ÷îì, òî âîçâðàùàåì åãî çíà÷åíèå
             return data[index].value;
         }
-        // Åñëè ýëåìåíò íå íàéäåí, òî âîçâðàùàåì îøèáêó
         throw std::runtime_error("This object not found");
     }
     catch (const std::exception& ex) {
@@ -108,13 +106,10 @@ int OpenShuffleTable<TKey, TValue>::findFreeIndex(TKey key) {
     int startIndex = index;
     do {
         if (data[index].key == key || data[index].key == TKey()) {
-            // Åñëè íàøëè ýëåìåíò ñ òàêèì æå êëþ÷îì èëè ýëåìåíò áåç êëþ÷à,
-            // òî âîçâðàùàåì èíäåêñ
             return index;
         }
-        index = (index + 1) % size; // äâèãàåìñÿ ïî òàáëèöå
+        index = (index + 1) % size;
     } while (index != startIndex);
-    // Åñëè ïðîøëè âñþ òàáëèöó è íå íàøëè ñâîáîäíûé èíäåêñ, òî âîçâðàùàåì -1
     return -1;
 }
 
@@ -138,6 +133,16 @@ void OpenShuffleTable<TKey, TValue>::resize(int newSize) {
     data = newData;
     size = newSize;
     count = newCount;
+}
+
+template <typename TKey, typename TValue>
+TTableRecord<TKey, TValue>* OpenShuffleTable<TKey, TValue>::getData() {
+    return data;
+}
+
+template<typename TKey, typename TValue>
+inline int OpenShuffleTable<TKey, TValue>::getSize() {
+    return size;
 }
 
 #endif // !LIB_OPENSHUFFLETABLE_OPENSHUFFLETABLE_H_

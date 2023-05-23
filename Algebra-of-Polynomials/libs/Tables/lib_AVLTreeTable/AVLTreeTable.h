@@ -11,6 +11,8 @@ public:
 	virtual int remove(TKey key);
 	virtual TValue find(TKey key);
 	virtual void print();
+
+	std::vector<TTableRecord<TKey, TValue>*> toArray();
 };
 
 template <typename TKey, typename TValue>
@@ -34,6 +36,11 @@ template <typename TKey, typename TValue>
 void AVLTreeTable<TKey, TValue>::print() {
 	std::cout << "AVL Tree Table" << std::endl;
 	tree.print();
+}
+
+template <typename TKey, typename TValue>
+std::vector<TTableRecord<TKey, TValue>*> AVLTreeTable<TKey, TValue>::toArray() {
+	return tree.toArray();
 }
 
 #endif // !LIB_AVLTREETABLE_AVLTREETABLE_H_

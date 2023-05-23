@@ -15,4 +15,10 @@ add_depend(Algebra-of-Polynomials lib_LinearArrayTable "../libs/Tables/lib_Linea
 add_depend(Algebra-of-Polynomials lib_AVLTreeTable "../libs/Tables/lib_AVLTreeTable")
 add_depend(Algebra-of-Polynomials lib_Parser "../libs/Functional/lib_Parser")
 
+# Add the target includes for PROJECT 
+target_include_directories(Algebra-of-Polynomials PRIVATE ${FORMS_DIR})
+
+#===================== LINKING LIBRARIES =======================#
+target_link_libraries(Algebra-of-Polynomials Qt6::Widgets)
+
 # TODO: Добавьте тесты и целевые объекты, если это необходимо.

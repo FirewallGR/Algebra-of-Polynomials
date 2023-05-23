@@ -19,6 +19,9 @@ public:
 	virtual int remove(TKey key) override;
 	virtual TValue find(TKey key) override;
 	virtual void print() override;
+
+	TTableRecord<TKey, TValue>* getData();
+	size_t getCount();
 };
 
 template<typename TKey, typename TValue>
@@ -129,6 +132,16 @@ void SortedArrayTable<TKey, TValue>::print() {
 			std::cout << "  " << data[index].key << ": " << data[index].value << std::endl;
 		}
 	}
+}
+
+template<typename TKey, typename TValue>
+inline TTableRecord<TKey, TValue>* SortedArrayTable<TKey, TValue>::getData() {
+	return data;
+}
+
+template<typename TKey, typename TValue>
+inline size_t SortedArrayTable<TKey, TValue>::getCount() {
+	return count;
 }
 
 #endif // !LIB_SORTEDARRAYTABLE_SORTEDARRAYTABLE_H_

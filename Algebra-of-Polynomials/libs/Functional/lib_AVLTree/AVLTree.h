@@ -1,4 +1,4 @@
-#ifndef LIB_AVLTREE_AVLTREE_H_
+п»ї#ifndef LIB_AVLTREE_AVLTREE_H_
 #define LIB_AVLTREE_AVLTREE_H_
 #include "..\lib_Tree\Tree.h"
 
@@ -8,18 +8,18 @@ private:
     int count;
     Node<TKey, TValue>* root;
 
-    // Вспомогательные функции для балансировки AVL-дерева
     int getHeight(Node<TKey, TValue>* node);
     int getBalance(Node<TKey, TValue>* node);
     Node<TKey, TValue>* rotateRight(Node<TKey, TValue>* node);
     Node<TKey, TValue>* rotateLeft(Node<TKey, TValue>* node);
     Node<TKey, TValue>* balanceNode(Node<TKey, TValue>* node);
 
-    // Вспомогательные функции для вставки и удаления узлов
     Node<TKey, TValue>* insertNode(Node<TKey, TValue>* node, TKey key, TValue value);
     Node<TKey, TValue>* removeNode(Node<TKey, TValue>* node, TKey key);
 
     void printHelper(Node<TKey, TValue>* node, int level);
+
+    void fillArray(Node<TKey, TValue>* node, std::vector<TTableRecord<TKey, TValue>*>& array);
 public:
     AVLTree();
     ~AVLTree();
@@ -28,6 +28,8 @@ public:
     virtual int remove(TKey key) override;
     virtual TValue find(TKey key) override;
     void print();
+
+    std::vector<TTableRecord<TKey, TValue>*> toArray();
 };
 
 template <typename TKey, typename TValue>
@@ -35,7 +37,7 @@ AVLTree<TKey, TValue>::AVLTree() : root(nullptr), count(0) {};
 
 template <typename TKey, typename TValue>
 AVLTree<TKey, TValue>::~AVLTree() {
-    
+
 }
 
 template <typename TKey, typename TValue>
@@ -239,6 +241,24 @@ void AVLTree<TKey, TValue>::printHelper(Node<TKey, TValue>* node, int level) {
         std::cout << node->getKey() << " : " << node->getValue() << std::endl;
     }
     printHelper(node->getLeft(), level + 1);
+}
+
+template <typename TKey, typename TValue>
+std::vector<TTableRecord<TKey, TValue>*> AVLTree<TKey, TValue>::toArray() {
+    std::vector<TTableRecord<TKey, TValue>*> array;
+    fillArray(root, array);
+    return array;
+}
+
+template <typename TKey, typename TValue>
+void AVLTree<TKey, TValue>::fillArray(Node<TKey, TValue>* node, std::vector<TTableRecord<TKey, TValue>*>& array) {
+    if (node == nullptr) {
+        return;
+    }
+
+    fillArray(node->getLeft(), array);
+    array.push_back(new TTableRecord<TKey, TValue>(node->getKey(), node->getValue()));
+    fillArray(node->getRight(), array);
 }
 
 #endif // !LIB_AVLTREE_AVLTREE_H_

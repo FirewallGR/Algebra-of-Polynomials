@@ -11,6 +11,10 @@ struct TTableRecord {
     bool operator == (const TTableRecord& record) {
         return this->key == record.key && this->value == record.value;
     }
+
+    bool isDeafult() {
+        return key == TKey();
+    }
 };
 
 #endif // !LIB_TABLE_TTABLERECORD_H_

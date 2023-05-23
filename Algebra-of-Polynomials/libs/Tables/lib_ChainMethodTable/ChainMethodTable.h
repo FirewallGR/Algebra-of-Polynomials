@@ -12,7 +12,7 @@ class ChainMethodTable : public HashTable<TKey, TValue> {
     int hash(TKey key, int newSize);
     virtual int hash(TKey key);
     virtual void resize(int newSize);
-    std::vector<std::vector<TTableRecord<TKey, TValue>>> table;
+    std::vector<std::vector<TTableRecord<TKey, TValue>>> data;
 public:
     ChainMethodTable();
     ~ChainMethodTable();
@@ -20,6 +20,9 @@ public:
     virtual int remove(TKey key);
     virtual TValue find(TKey key);
     virtual void print();
+
+    std::vector<std::vector<TTableRecord<TKey, TValue>>> getData();
+    int getSize();
 };
 
 template <typename TKey, typename TValue>
@@ -28,12 +31,12 @@ ChainMethodTable<TKey, TValue>::ChainMethodTable() {
     count = 0;
     loadFactor = 0.7;
     threshold = size * loadFactor;
-    table.resize(size);
+    data.resize(size);
 }
 
 template <typename TKey, typename TValue>
 ChainMethodTable<TKey, TValue>::~ChainMethodTable() {
-    table.clear();
+    data.clear();
 }
 
 template <typename TKey, typename TValue>
@@ -42,7 +45,7 @@ int ChainMethodTable<TKey, TValue>::insert(TKey key, TValue value) {
 
     TTableRecord<TKey, TValue> record = { key, value };
     int index = hash(record.key);
-    table[index].push_back(record);
+    data[index].push_back(record);
     count++;
 
     return 0;
@@ -51,7 +54,7 @@ int ChainMethodTable<TKey, TValue>::insert(TKey key, TValue value) {
 template <typename TKey, typename TValue>
 int ChainMethodTable<TKey, TValue>::remove(TKey key) {
     int index = hash(key);
-    std::vector<TTableRecord<TKey, TValue>>& chain = table[index];
+    std::vector<TTableRecord<TKey, TValue>>& chain = data[index];
 
     for (auto it = chain.begin(); it != chain.end(); it++) {
         if (it->key == key) {
@@ -68,7 +71,7 @@ TValue ChainMethodTable<TKey, TValue>::find(TKey key) {
     try {
         TValue result;
         int index = hash(key);
-        std::vector<TTableRecord<TKey, TValue>>& chain = table[index];
+        std::vector<TTableRecord<TKey, TValue>>& chain = data[index];
 
         for (auto it = chain.begin(); it != chain.end(); it++) {
             if (it->key == key) {
@@ -87,7 +90,7 @@ template <typename TKey, typename TValue>
 void ChainMethodTable<TKey, TValue>::print() {
     std::cout << "Chain Method Table:" << std::endl;
     for (int i = 0; i < size; i++) {
-        std::vector<TTableRecord<TKey, TValue>>& chain = table[i];
+        std::vector<TTableRecord<TKey, TValue>>& chain = data[i];
 
         if (!chain.empty()) {
             std::cout << "Chain " << i << ": ";
@@ -119,7 +122,7 @@ void ChainMethodTable<TKey, TValue>::resize(int newSize) {
     std::vector<std::vector<TTableRecord<TKey, TValue>>> newTable(newSize);
 
     for (int i = 0; i < size; i++) {
-        std::vector<TTableRecord<TKey, TValue>>& chain = table[i];
+        std::vector<TTableRecord<TKey, TValue>>& chain = data[i];
 
         for (auto it = chain.begin(); it != chain.end(); it++) {
             int newIndex = hash(it->key, newSize);
@@ -127,9 +130,19 @@ void ChainMethodTable<TKey, TValue>::resize(int newSize) {
         }
     }
 
-    table.swap(newTable);
+    data.swap(newTable);
     size = newSize;
     threshold = size * loadFactor;
+}
+
+template <typename TKey, typename TValue>
+std::vector<std::vector<TTableRecord<TKey, TValue>>> ChainMethodTable<TKey, TValue>::getData() {
+    return data;
+}
+
+template<typename TKey, typename TValue>
+int ChainMethodTable<TKey, TValue>::getSize() {
+    return size;
 }
 
 #endif // !LIB_CHAINMETHODTABLE_CHAINMETHODTABLE_H_

@@ -27,7 +27,7 @@ public:
 			push_back(current->getValue());
 			current = current->getLeft();
 		}
-	}
+	};
 
 	List<TValue>& operator=(const List<TValue>& other) {
 		_size = 0;
@@ -39,7 +39,7 @@ public:
 			current = current->getLeft();
 		}
 		return *this;
-	}
+	};
 
 
 	TValue& get(int index) {
@@ -56,8 +56,7 @@ public:
 		catch (const std::exception& ex) {
 			std::cerr << "Error:" << ex.what() << std::endl;
 		}
-	}
-
+	};
 
 	int remove(const TValue& obj) {
 		try {
@@ -85,15 +84,17 @@ public:
 					}
 					delete current;
 					_size--;
-                    if (_size == 0)
-                        clear();
-					return 0;
+					if (_size == 0)
+						clear();
+					return 0; // Успешно удалено
 				}
 				current = current->getRight();
 			}
+			return -1; // Элемент не найден
 		}
 		catch (const std::exception& ex) {
 			std::cerr << "Error:" << ex.what() << std::endl;
+			return -1; // Произошла ошибка
 		}
 	};
 

@@ -16,6 +16,9 @@ public:
 	virtual int remove(TKey key) override;
 	virtual TValue find(TKey key) override;
 	virtual void print() override;
+
+	TTableRecord<TKey, TValue>* getData();
+	size_t getCount();
 };
 
 template <typename TKey, typename TValue>
@@ -91,6 +94,16 @@ void LinearArrayTable<TKey, TValue>::print() {
 			std::cout << "  " << data[index].key << ": " << data[index].value << std::endl;
 		}
 	}
+}
+
+template<typename TKey, typename TValue>
+inline TTableRecord<TKey, TValue>* LinearArrayTable<TKey, TValue>::getData() {
+	return data;
+}
+
+template<typename TKey, typename TValue>
+inline size_t LinearArrayTable<TKey, TValue>::getCount() {
+	return count;
 }
 
 #endif // !LIB_LINEARARRAYTABLE_LINEARARRAYTABLE_H_

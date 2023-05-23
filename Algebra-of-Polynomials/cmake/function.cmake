@@ -35,7 +35,7 @@ function(create_executable_project TARGET)
     
 	# создаём исполняемый проект,
 	# в него добавляются файлы из переменных ${TARGET_SRC} (исходный код) и ${TARGET_HD} (хедеры);
-	add_executable(${TARGET} ${TARGET_SRC} ${TARGET_HD})
+	add_executable(${TARGET} ${TARGET_SRC} ${TARGET_HD} ${SOURCES})
     
 	# добавляем зависимость от всех имеющихся библиотек
     get_property ( INCLUDE_DIRS GLOBAL PROPERTY INC_DIR)
